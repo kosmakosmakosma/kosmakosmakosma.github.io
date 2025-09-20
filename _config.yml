@@ -1,0 +1,7 @@
+title: "Kosma’s Portfolio"
+description: "My projects and research"
+theme: minima
+markdown: kramdown
+kramdown:
+  math_engine: mathjax
+  syntax_highlighter: rouge
