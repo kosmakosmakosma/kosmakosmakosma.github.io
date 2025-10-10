@@ -3,22 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Sample Project — Kosma Krzyzanowski</title>
-  <meta name="description" content="A sample project page demonstrating LaTeX equations rendered with MathJax." />
+  <title>Time-Series Forecasting — Kosma Krzyzanowski</title>
+  <meta name="description" content="A brief walkthrough of forecasting and evaluation with LaTeX equations." />
   <link rel="stylesheet" href="../assets/css/style.css" />
-
-  <!-- MathJax config (inline to keep pages self-contained) -->
   <script>
     window.MathJax = {
       tex: {
         inlineMath: [['$', '$'], ['\\(', '\\)']],
         displayMath: [['$$','$$'], ['\\[','\\]']],
-        tags: 'none'
       },
-      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
     };
   </script>
-  <!-- MathJax via CDN -->
   <script id="MathJax-script" async
     src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
   </script>
@@ -40,34 +36,22 @@
 
   <main class="container">
     <article class="post">
-      <h1>Sample Project with Math</h1>
+      <h1>Time-Series Forecasting</h1>
       <p class="muted">2025 • Tools: HTML, CSS, MathJax</p>
 
       <p>
-        This page shows how LaTeX renders on GitHub Pages using MathJax.
-        Inline math like $E=mc^2$ or $\\alpha + \\beta = \\gamma$ works,
-        and display math too:
+        Consider an AR(1) model:
+        $$ x_t = \phi x_{t-1} + \epsilon_t, \quad \epsilon_t \sim \mathcal{N}(0,\sigma^2). $$
+        One-step-ahead forecast is $\hat{x}_{t|t-1} = \phi x_{t-1}$.
       </p>
 
-      <div class="equation">
-        $$ \\nabla \\cdot \\vec{E} = \\frac{\\rho}{\\varepsilon_0} $$
-      </div>
-
-      <h2>Derivation sketch</h2>
+      <h2>Evaluation</h2>
       <p>
-        Consider the loss function
-        $$ \\mathcal{L}(\\theta) = \\frac{1}{N} \\sum_{i=1}^N \\bigl(f_\\theta(x_i) - y_i\\bigr)^2, $$
-        its gradient is
-        $$ \\nabla_\\theta \\mathcal{L}(\\theta) =
-           \\frac{2}{N} \\sum_{i=1}^N \\bigl(f_\\theta(x_i) - y_i\\bigr)\\,\\nabla_\\theta f_\\theta(x_i). $$
+        Mean Squared Error (MSE):
+        $$ \mathrm{MSE} = \frac{1}{N} \sum_{t=1}^N (x_t - \hat{x}_t)^2. $$
+        Mean Absolute Error (MAE):
+        $$ \mathrm{MAE} = \frac{1}{N} \sum_{t=1}^N |x_t - \hat{x}_t|. $$
       </p>
-
-      <h2>Highlights</h2>
-      <ul>
-        <li>Zero build tools — pure HTML/CSS/JS.</li>
-        <li>Robust link structure for GitHub Pages.</li>
-        <li>MathJax 3 for crisp LaTeX rendering.</li>
-      </ul>
 
       <p>
         <a class="btn small" href="./">← Back to projects</a>
