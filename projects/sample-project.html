@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Furata-style Inverted Pendulum — Your Name</title>
+  <title>Furata-style Inverted Pendulum — Kosma Krzyzanowski</title>
   <meta name="description" content="Modelling, identification, and control of a Furata-style inverted pendulum (Quanser QUBE)." />
   <link rel="stylesheet" href="../assets/css/style.css" />
 
@@ -25,14 +25,14 @@
 <body>
   <header class="site-header">
     <div class="container nav">
-      <a class="brand" href="../">Your Name</a>
+      <a class="brand" href="../">Kosma Krzyzanowski</a>
       <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
       <nav class="nav-links" data-collapsible>
         <a href="../">Home</a>
         <a href="./">Projects</a>
         <a href="../assets/cv/placeholder.txt">CV</a>
-        <a href="https://www.linkedin.com/in/your-handle" target="_blank" rel="noopener">LinkedIn</a>
-        <a href="https://github.com/your-handle" target="_blank" rel="noopener">GitHub</a>
+        <a href="http://www.linkedin.com/in/kosmak" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://github.com/kosmakosmakosma" target="_blank" rel="noopener">GitHub</a>
       </nav>
     </div>
   </header>
@@ -48,7 +48,7 @@
       <h2>Modelling</h2>
       <p>The rotary pendulum is derived with the <strong>principle of least action</strong>.<br>
       Generalised coordinates \(q=[\theta,\alpha]^{\!\top}\), with angles defined as in:</p>
-      <p><img src="../img/plots/sketch.png" alt="alpha_val"></p>
+      <p><img src="assets/img/plots/sketch.png" alt="alpha_val"></p>
 
       <h3>1. Lagrangian</h3>
       <div class="equation">\( L = T_0 + T_1 - V_0 - V_1 \)</div>
@@ -156,9 +156,9 @@
 
       <h2>Identification</h2>
       <p>With the obtained dynamics model of the system, missing parameters were identified. For that the MATLAB grey-box identification was used. In order to ensure persistent excitation of the system, an input signal, made up of frequency-sweep, sine, square and sawtooth signals was used. The identified model was then validated on a different combination of constituent signals with frequencies in the range 0.5 - 4&nbsp;Hz. The results can be seen in:</p>
-      <p><img src="/irrelevant/report/figures/output2_alpha.jpg" alt="alpha_val"><br>
+      <p><img src="assets/img/figures/output2_alpha.jpg" alt="alpha_val"><br>
       Identified model response vs actual of the \(\alpha\) angle</p>
-      <p><img src="/irrelevant/report/figures/output2_theta.jpg" alt="theta_val"><br>
+      <p><img src="assets/img/figures/output2_theta.jpg" alt="theta_val"><br>
       Identified model response vs actual of the \(\theta\) angle</p>
 
       <p>With the following performance:</p>
@@ -221,9 +221,9 @@
       <h3>Comparison</h3>
       <p><strong>See:</strong> <a href="https://youtu.be/A2EXIjPWqo4" target="_blank" rel="noopener">VIDEO</a></p>
       <p>The performance of the controllers was compared. First on a sine reference input:</p>
-      <p><img src="../img/plots/controllers/lqr_mpc_sine.jpg" alt="lqr vs mpc — sine"></p>
+      <p><img src="assets/img/plots/controllers/lqr_mpc_sine.jpg" alt="lqr vs mpc — sine"></p>
       <p>Secondly on a trapezoidal wave.</p>
-      <p><img src="../img/plots/controllers/lqr_mpc_step_limiter.jpg" alt="lqr vs mpc — trapezoid"></p>
+      <p><img src="assets/img/plots/controllers/lqr_mpc_step_limiter.jpg" alt="lqr vs mpc — trapezoid"></p>
       <p>The performance of the two controllers was very similar. That is to be expected as when the actual state stays inside the region where the linear model is accurate, the MPC optimisation reduces to the same Riccati solution used by the LQR. In that situation the last predicted state is inside the MPC’s terminal set, so the optimal feedback law that MPC applies at each step is the LQR gain.</p>
 
       <h2>Swing up</h2>
@@ -291,7 +291,7 @@
 
   <footer class="site-footer">
     <div class="container">
-      <small>© <span id="year"></span> Your Name.</small>
+      <small>© <span id="year"></span> Kosma Krzyzanowski.</small>
     </div>
   </footer>
 
