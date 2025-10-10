@@ -1,38 +1,20 @@
-# Kosma's Portfolio
+<div align="center">
+<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+</div>
 
-Welcome to my GitHub Pages portfolio!  
-Navigate using the tabs below.
+# Run and deploy your AI Studio app
 
----
+This contains everything you need to run your app locally.
 
-## 🏠 Home / About
+View your app in AI Studio: https://ai.studio/apps/drive/1kzyEDDaO7p3udISYCTvqSWwG_Yr1jANt
 
-![Profile Picture](path/to/your/profile-picture.jpg)
+## Run Locally
 
-Hello! I'm Kosma, a passionate developer and MSc student.  
-I enjoy building web applications, exploring new technologies, and collaborating on open-source projects.
+**Prerequisites:**  Node.js
 
----
 
-## 📄 CV
-
-[Download my CV (PDF)](path/to/your-cv.pdf)
-
----
-
-## 💼 Portfolio
-
-Here are some of my GitHub repositories:
-
-- [Project 1](https://github.com/kosmakosmakosma/project1)  
-    _Short description of project 1._
-
-- [Project 2](https://github.com/kosmakosmakosma/project2)  
-    _Short description of project 2._
-
-- [Project 3](https://github.com/kosmakosmakosma/project3)  
-    _Short description of project 3._
-
----
-
-*Feel free to connect with me on [GitHub](https://github.com/kosmakosmakosma)!*
+1. Install dependencies:
+   `npm install`
+2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
+3. Run the app:
+   `npm run dev`
