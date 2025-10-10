@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sample Project — Your Name</title>
+  <meta name="description" content="A sample project page demonstrating LaTeX equations rendered with MathJax." />
+  <link rel="stylesheet" href="../assets/css/style.css" />
+
+  <!-- MathJax config (inline to keep pages self-contained) -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$','$$'], ['\\[','\\]']],
+        tags: 'none'
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <!-- MathJax via CDN -->
+  <script id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="../">Your Name</a>
+      <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+      <nav class="nav-links" data-collapsible>
+        <a href="../">Home</a>
+        <a href="./">Projects</a>
+        <a href="../assets/cv/placeholder.txt">CV</a>
+        <a href="https://www.linkedin.com/in/your-handle" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://github.com/your-handle" target="_blank" rel="noopener">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <article class="post">
+      <h1>Sample Project with Math</h1>
+      <p class="muted">2025 • Tools: HTML, CSS, MathJax</p>
+
+      <p>
+        This page shows how LaTeX renders on GitHub Pages using MathJax.
+        Inline math like $E=mc^2$ or $\\alpha + \\beta = \\gamma$ works,
+        and display math too:
+      </p>
+
+      <div class="equation">
+        $$ \\nabla \\cdot \\vec{E} = \\frac{\\rho}{\\varepsilon_0} $$
+      </div>
+
+      <h2>Derivation sketch</h2>
+      <p>
+        Consider the loss function
+        $$ \\mathcal{L}(\\theta) = \\frac{1}{N} \\sum_{i=1}^N \\bigl(f_\\theta(x_i) - y_i\\bigr)^2, $$
+        its gradient is
+        $$ \\nabla_\\theta \\mathcal{L}(\\theta) =
+           \\frac{2}{N} \\sum_{i=1}^N \\bigl(f_\\theta(x_i) - y_i\\bigr)\\,\\nabla_\\theta f_\\theta(x_i). $$
+      </p>
+
+      <h2>Highlights</h2>
+      <ul>
+        <li>Zero build tools — pure HTML/CSS/JS.</li>
+        <li>Robust link structure for GitHub Pages.</li>
+        <li>MathJax 3 for crisp LaTeX rendering.</li>
+      </ul>
+
+      <p>
+        <a class="btn small" href="./">← Back to projects</a>
+      </p>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <small>© <span id="year"></span> Your Name.</small>
+    </div>
+  </footer>
+
+  <script src="../assets/js/main.js" defer></script>
+</body>
+</html>
