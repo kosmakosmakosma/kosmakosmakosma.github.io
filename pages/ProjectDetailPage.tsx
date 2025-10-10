@@ -1,9 +1,8 @@
-
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { PROJECTS } from '../constants';
-import CodeBlock from '../components/CodeBlock';
-import { ArrowLeftIcon } from '../components/icons';
+import { PROJECTS } from '../constants.ts';
+import CodeBlock from '../components/CodeBlock.tsx';
+import { ArrowLeftIcon } from '../components/icons.tsx';
 
 const ProjectDetailPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();

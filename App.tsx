@@ -1,10 +1,9 @@
-
 import React from 'react';
 import { HashRouter, Routes, Route, Link } from 'react-router-dom';
-import HomePage from './pages/HomePage';
-import ProjectDetailPage from './pages/ProjectDetailPage';
-import { GithubIcon, LinkedinIcon, MailIcon } from './components/icons';
-import ScrollToTop from './components/ScrollToTop';
+import HomePage from './pages/HomePage.tsx';
+import ProjectDetailPage from './pages/ProjectDetailPage.tsx';
+import { GithubIcon, LinkedinIcon, MailIcon } from './components/icons.tsx';
+import ScrollToTop from './components/ScrollToTop.tsx';
 
 const App: React.FC = () => {
   return (

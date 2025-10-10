@@ -1,8 +1,7 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { PROJECTS } from '../constants';
-import { Project } from '../types';
+import { PROJECTS } from '../constants.ts';
+import { Project } from '../types.ts';
 
 const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
   return (
