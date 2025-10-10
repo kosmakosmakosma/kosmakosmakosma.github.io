@@ -1,5 +1,5 @@
 import React from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { PROJECTS } from '../constants.ts';
 import CodeBlock from '../components/CodeBlock.tsx';
 import { ArrowLeftIcon } from '../components/icons.tsx';
@@ -12,17 +12,17 @@ const ProjectDetailPage: React.FC = () => {
     return (
       <div className="text-center py-20">
         <h2 className="text-2xl font-bold">Project not found</h2>
-        <Link to="/" className="text-primary hover:underline mt-4 inline-block">Go back to Home</Link>
+        <a href="#/" className="text-primary hover:underline mt-4 inline-block">Go back to Home</a>
       </div>
     );
   }
 
   return (
     <div className="max-w-4xl mx-auto">
-      <Link to="/" className="inline-flex items-center gap-2 text-primary hover:text-sky-400 mb-8 transition-colors">
+      <a href="#/" className="inline-flex items-center gap-2 text-primary hover:text-sky-400 mb-8 transition-colors">
         <ArrowLeftIcon />
         Back to Projects
-      </Link>
+      </a>
 
       <h1 className="text-4xl md:text-5xl font-extrabold mb-4 text-white">{project.title}</h1>
       <div className="flex flex-wrap gap-2 mb-8">

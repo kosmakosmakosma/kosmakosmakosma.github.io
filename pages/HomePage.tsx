@@ -1,11 +1,10 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { PROJECTS } from '../constants.ts';
 import { Project } from '../types.ts';
 
 const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
   return (
-    <Link to={`/projects/${project.id}`} className="block group">
+    <a href={`#/projects/${project.id}`} className="block group">
       <div className="bg-slate-800 rounded-lg overflow-hidden h-full flex flex-col transition-all duration-300 ease-in-out hover:shadow-2xl hover:shadow-primary/20 hover:-translate-y-2 border border-slate-700">
         <img src={project.images[0]} alt={project.title} className="w-full h-48 object-cover" />
         <div className="p-6 flex flex-col flex-grow">
@@ -20,7 +19,7 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
           </div>
         </div>
       </div>
-    </Link>
+    </a>
   );
 };
 

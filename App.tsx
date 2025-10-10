@@ -1,5 +1,5 @@
 import React from 'react';
-import { HashRouter, Routes, Route, Link } from 'react-router-dom';
+import { HashRouter, Routes, Route } from 'react-router-dom';
 import HomePage from './pages/HomePage.tsx';
 import ProjectDetailPage from './pages/ProjectDetailPage.tsx';
 import { GithubIcon, LinkedinIcon, MailIcon } from './components/icons.tsx';
@@ -13,9 +13,9 @@ const App: React.FC = () => {
         <header className="bg-background/80 backdrop-blur-sm sticky top-0 z-50 border-b border-slate-800">
           <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
-              <Link to="/" className="text-2xl font-bold text-primary hover:text-sky-400 transition-colors">
+              <a href="#/" className="text-2xl font-bold text-primary hover:text-sky-400 transition-colors">
                 J. Doe | Control Engineer
-              </Link>
+              </a>
               <div className="flex items-center space-x-4">
                 <a href="./CV.pdf" download="JohnDoe_CV.pdf" className="px-4 py-2 text-sm font-medium text-white bg-primary rounded-md hover:bg-sky-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 focus:ring-offset-background transition-colors">
                   Download CV
