@@ -3,81 +3,140 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Optimization Toy — Kosma Krzyzanowski</title>
-  <meta name="description" content="A small constrained optimization demo with LaTeX-rendered math." />
+  <title>Optimization Toy — Your Name</title>
+  <meta name="description" content="Delft Hyperloop — role, system objectives, and key subsystems." />
   <link rel="stylesheet" href="../assets/css/style.css" />
+
+  <!-- MathJax (kept for consistency across project pages; safe even without equations) -->
   <script>
     window.MathJax = {
       tex: {
         inlineMath: [['$', '$'], ['\\(', '\\)']],
-        displayMath: [['$$','$$'], ['\\[','\\]']],
+        displayMath: [['$$','$$'], ['\\[','\\]']]
       },
       options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
     };
   </script>
   <script id="MathJax-script" async
-    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
-  </script>
+          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <!-- Lightweight inline layout for side-by-side images -->
+  <style>
+    .img-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      align-items: start;
+      margin: 12px 0 18px;
+    }
+    figure { margin: 0; }
+    figure img { width: 100%; height: auto; border-radius: 12px; border: 1px solid var(--border); }
+    figure figcaption { margin-top: 6px; font-size: 0.9rem; color: var(--muted); }
+  </style>
 </head>
 <body>
-  <header class="site-header">
-    <div class="container nav">
-      <a class="brand" href="../">Kosma Krzyzanowski</a>
-      <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
-      <nav class="nav-links" data-collapsible>
-        <a href="../">Home</a>
-        <a href="./">Projects</a>
-        <a href="../assets/cv/placeholder.txt">CV</a>
-        <a href="http://www.linkedin.com/in/kosmak" target="_blank" rel="noopener">LinkedIn</a>
-        <a href="https://github.com/kosmakosmakosma" target="_blank" rel="noopener">GitHub</a>
-      </nav>
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="../">Your Name</a>
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+    <nav class="nav-links" data-collapsible>
+      <a href="../">Home</a>
+      <a href="./">Projects</a>
+      <a href="../assets/cv/CV.pdf">CV</a>
+      <a href="https://www.linkedin.com/in/your-handle" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://github.com/your-handle" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+  <article class="post">
+    <h1>Optimization Toy — Delft Hyperloop</h1>
+    <p class="muted">Role, system overview, and key subsystems</p>
+
+    <h2>My role</h2>
+    <p>
+      For nearly a year, I held the position of <strong>Chief Engineer</strong> at Delft Hyperloop. Around December,
+      I also assumed the planning and execution responsibilities from our project manager, who was temporarily
+      unable to continue in his role.
+    </p>
+    <p>
+      In this combined capacity, I was responsible for both the <strong>technical direction</strong> and
+      <strong>project coordination</strong> of the team. My main tasks included:
+    </p>
+    <ul>
+      <li><strong>Defining technical objectives and requirements</strong> — from high-level system goals down to detailed component specifications.</li>
+      <li><strong>Coordinating work across departments</strong>, ensuring alignment of parameters, design interfaces, and dependencies between subsystems.</li>
+      <li><strong>Leading planning and execution</strong> across different time horizons:
+        <ul>
+          <li>long-term (annual roadmap and milestones),</li>
+          <li>medium-term (project phases), and</li>
+          <li>short-term (daily operational priorities).</li>
+        </ul>
+      </li>
+      <li><strong>Overseeing design quality</strong>, production, and testing processes to ensure consistency and technical excellence.</li>
+      <li><strong>Managing cross-functional communication</strong>, monitoring interfaces between technical teams to prevent integration issues.</li>
+      <li><strong>Leading departmental leads</strong> at a strategic level while also <strong>supervising the daily operations</strong> of the testing team later in the year.</li>
+    </ul>
+    <p>
+      This role required a balance of <strong>strategic oversight</strong> and <strong>hands-on technical leadership</strong>,
+      as well as close collaboration with multiple engineering disciplines to deliver a cohesive and high-performing prototype.
+    </p>
+
+    <!-- Two images side by side (replace filenames with your own) -->
+    <div class="img-row">
+      <figure>
+        <img src="../img/plots/pod_1.jpg" alt="Delft Hyperloop pod — view 1">
+        <figcaption>Pod prototype — view 1</figcaption>
+      </figure>
+      <figure>
+        <img src="../img/plots/pod_2.jpg" alt="Delft Hyperloop pod — view 2">
+        <figcaption>Pod prototype — view 2</figcaption>
+      </figure>
     </div>
-  </header>
 
-  <main class="container">
-    <article class="post">
-      <h1>Optimization Toy</h1>
-      <p class="muted">2025 • Tools: HTML, CSS, MathJax</p>
+    <h2>System and Objectives</h2>
+    <p>
+      Delft Hyperloop is a team that each year develops a new hyperloop prototype from the ground up to set new
+      records and compete in international challenges. In my year, we set a goal of carrying out a
+      <strong>first levitating lane switch without moving elements</strong> — a crucial step toward a scalable and
+      low-maintenance hyperloop network. This design enabled maximum throughput while eliminating the wear and
+      reliability challenges associated with moving track components.
+    </p>
 
-      <p>
-        We solve a simple constrained optimization problem:
-      </p>
+    <h2>Levitation, Propulsion and Structure</h2>
+    <p>
+      The pod achieved <strong>full electromagnetic levitation</strong>, even during lane switching and turning maneuvers.
+      Vertical stability was provided by four <strong>Hybrid Electromagnetic Suspension (HEMS)</strong> units, while lateral
+      guidance was maintained through four <strong>Electromagnetic Suspension (EMS)</strong> actuators that dynamically
+      balanced forces to keep the pod centered within millimeter precision. Propulsion was delivered by a
+      <strong>Linear Flux Switching Permanent Magnet (LFSPM)</strong> motor — an efficient, track-passive design that enabled
+      acceleration up to <strong>1&nbsp;m/s²</strong>. The lightweight <strong>rectangular ladder-frame chassis</strong> integrated both
+      the propulsion and braking systems, with symmetrical brakes mounted near the vertical beams to ensure
+      optimal stability.
+    </p>
 
-      <div class="equation">
-        $$ \min_{x \in \mathbb{R}^2} \; f(x) = x_1^2 + 2x_2^2 \quad
-           \text{s.t. } \; g(x) = x_1 + x_2 - 1 = 0. $$
-      </div>
+    <h2>Thermal Management, Control Systems and Powertrain</h2>
+    <p>
+      To ensure vacuum compatibility and sustained performance, the pod incorporated a <strong>water-based thermal
+      management system</strong> that extracted heat from the motor drives and vacuum enclosure and dissipated it through
+      <strong>evaporative cooling</strong>. We achieved <strong>high-precision localization</strong>, accurate to <strong>3&nbsp;mm</strong>, using a scalable
+      strip-laser system, while levitation sensors maintained positioning within <strong>±10&nbsp;µm</strong>. A set of safety and
+      communication PCBs continuously monitored pod health, activating braking in case of faults, and constant
+      telemetry ensured reliable communication with the ground station. The team additionally developed fully custom
+      <strong>high- and low-voltage batteries</strong> as well as the <strong>power distribution boards</strong>.
+    </p>
 
-      <p>
-        The Lagrangian is
-        $$ \mathcal{L}(x, \lambda) = x_1^2 + 2x_2^2 + \lambda(x_1 + x_2 - 1). $$
-        Setting gradients to zero:
-        $$ \nabla_x \mathcal{L} =
-        \begin{bmatrix}
-          2x_1 + \lambda \\
-          4x_2 + \lambda
-        \end{bmatrix} = 0, \quad
-        \frac{\partial \mathcal{L}}{\partial \lambda} = x_1 + x_2 - 1 = 0. $$
-      </p>
+    <p><a class="btn small" href="./">← Back to projects</a></p>
+  </article>
+</main>
 
-      <p>
-        From the first two equations, $x_1 = -\lambda/2$ and $x_2 = -\lambda/4$.
-        Enforce the constraint $x_1 + x_2 = 1 \Rightarrow -\lambda/2 - \lambda/4 = 1 \Rightarrow \lambda = -\tfrac{4}{3}$.
-        Hence $x_1^\star = \tfrac{2}{3}$ and $x_2^\star = \tfrac{1}{3}$.
-      </p>
+<footer class="site-footer">
+  <div class="container">
+    <small>© <span id="year"></span> Your Name.</small>
+  </div>
+</footer>
 
-      <p>
-        <a class="btn small" href="./">← Back to projects</a>
-      </p>
-    </article>
-  </main>
-
-  <footer class="site-footer">
-    <div class="container">
-      <small>© <span id="year"></span> Kosma Krzyzanowski.</small>
-    </div>
-  </footer>
-
-  <script src="../assets/js/main.js" defer></script>
+<script src="../assets/js/main.js" defer></script>
 </body>
 </html>
