@@ -1,6 +1,0 @@
-Place your CV here as a PDF named `CV.pdf`, then update links to:
-assets/cv/CV.pdf
-
-Example:
-- Replace this placeholder file with your real CV.pdf
-- Update `index.html`, `projects/*.html`, and `projects/index.html` to point to assets/cv/CV.pdf
