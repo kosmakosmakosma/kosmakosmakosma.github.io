@@ -43,7 +43,6 @@
       <p><strong>Authors:</strong> Kosma Krzyżanowski, Áron Dömötör Kohlhéb</p>
       <p><strong>Hardware:</strong> Quanser QUBE Furata Pendulum, courtesy of Delft Centre for Systems and Control at the TU Delft</p>
       <p><strong>Goal:</strong> Swing up and control the pendulum at its unstable equilibrium.</p>
-      <p><strong>Demonstration of the controllers' performance</strong> <a href="https://youtu.be/A2EXIjPWqo4" target="_blank" rel="noopener">VIDEO</a></p>
 
 
       <section class="card">
@@ -206,11 +205,9 @@
       <p>Two stabilising controllers were implemented: Linear Quadratics Regulator and Model Predictive Controller.</p>
 
       <h3>Linear Quadratic Regulator</h3>
-      <p><strong>See:</strong> <a href="https://youtu.be/A2EXIjPWqo4" target="_blank" rel="noopener">VIDEO</a></p>
       <p>An LQR controller with an integrator on the theta angle was implemented. It was found that gains Q=[0 0 7 0] and R = 100 resulted in a very well performing controller in terms of reference tracking and disturbance rejection. The gains correspond to penalising the value \(\theta\) diverging from the reference and the control input.</p>
 
       <h3>Model Predictive Control</h3>
-      <p><strong>see:</strong> <a href="https://youtu.be/A2EXIjPWqo4" target="_blank" rel="noopener">VIDEO</a></p>
       <p>In order to implement MPC, the <strong>heavy algebra of MPC is pre-computed off-line</strong>.<br>
       First an ellipsoidal terminal set</p>
       <div class="equation">\( \mathcal X_f = \{\,x \mid x^{\!\top}P x \le a\} \)</div>
@@ -234,7 +231,6 @@
       <p>Different values were chosen for the horizon length. It was found that above a horizon of N=30, the controller did not work, while for horizon values in the range \(N \in [2,30]\), the controller behaved well and very similrly to LQR​. The only difference was that for higher values of N, there was less overshoot.</p>
 
       <h3>Comparison</h3>
-      <p><strong>See:</strong> <a href="https://youtu.be/A2EXIjPWqo4" target="_blank" rel="noopener">VIDEO</a></p>
       <p>The performance of the controllers was compared. First on a sine reference input:</p>
       <p><img src="../assets/img/plots/controllers/lqr_mpc_sine.jpg" alt="lqr vs mpc — sine"></p>
       <p>Secondly on a trapezoidal wave.</p>
@@ -242,7 +238,6 @@
       <p>The performance of the two controllers was very similar. That is to be expected as when the actual state stays inside the region where the linear model is accurate, the MPC optimisation reduces to the same Riccati solution used by the LQR. In that situation the last predicted state is inside the MPC’s terminal set, so the optimal feedback law that MPC applies at each step is the LQR gain.</p>
 
       <h2>Swing up</h2>
-      <p><strong>See:</strong> <a href="https://youtu.be/A2EXIjPWqo4" target="_blank" rel="noopener">VIDEO</a></p>
       <p>In order to design a swing up controller, an <strong>"Energy pumping"</strong> approach from the paper by Åström and Furuta (2000)<span>[1]</span> is used. The idea is to implement a control law, that increases the energy of the pendulum, until it is equal the potential energy of the stationary pendulum at the unstable equlibrium.</p>
 
       <h3>1&nbsp; Energy model used on-line</h3>
