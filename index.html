@@ -12,7 +12,7 @@
 <body>
   <header class="site-header">
     <div class="container nav">
-      <a class="brand" href="/">Kosma Krzyzanowski</a>
+      <a class="btn ghost" href="/" ><strong>Kosma Krzyzanowski</strong></a>
       <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
       <nav class="nav-links" data-collapsible>
         <a href="/">Home</a>
@@ -29,9 +29,20 @@
     <section class="hero card">
       <img class="avatar" src="assets/img/profile.png" alt="Profile photo" />
       <div class="hero-text">
-      <h1>I’m <span class="accent">Kosma Krzyzanowski</span> and this is my <span class="accent">Portfolio</span></h1>
+      <h1>
+        I’m <span class="accent gradient-text">Kosma Krzyzanowski</span> and this is my <span class="accent gradient-text">Portfolio</span>
+      </h1>
+      <style>
+        .gradient-text {
+          background: linear-gradient(90deg, #007cf0, #00dfd8);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          color: transparent;
+        }
+      </style>
       <p>
-        Welcome, I’m a systems and control engineer with a passion for designing and implementing solutions that work in practice. My expertise spans control systems, robotics, and project management, with hands-on experience in both hardware and software development.
+        Welcome, I’m a systems and control engineer with a passion for designing and implementing solutions that work in practice. My expertise spans control systems (Inverted Pendulum), robotics (Robotic Arm), and project management (Delft Hyperloop), with hands-on experience in both hardware and software development.
         I thrive on tackling complex challenges and turning ideas into reality, always aiming for practical and efficient outcomes.
         Whether it’s leading a team to build a prototype or diving into the details of system dynamics, I bring a blend of technical skill and real-world insight to every project.
       </p>
