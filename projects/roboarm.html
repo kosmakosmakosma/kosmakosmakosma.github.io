@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Time-Series Forecasting — Kosma Krzyzanowski</title>
-  <meta name="description" content="A brief walkthrough of forecasting and evaluation with LaTeX equations." />
+  <title>Robotic Ashtray</title>
+  <meta name="description" content="A robotic arm " />
   <link rel="stylesheet" href="../assets/css/style.css" />
   <script>
     window.MathJax = {
@@ -38,31 +38,28 @@
     <article class="post">
       <section class="card">
   <h1>Robotic Ashtray</h1>
-  <p class="muted">Personal project • Robotics • Python • OpenCV • Raspberry Pi</p>
+  <p class="muted">Robotics • Python • OpenCV • Raspberry Pi • Linux</p>
 
+  <h2>Genesis</h2>
+  <p>
+This project was inspired by the butter-passing robot from <em>Rick and Morty</em>. In the show, a small robot asks its creator, “What is my purpose?”, and upon hearing “You pass butter,” promptly has an existential crisis.
+In a similar spirit, I’ve always found the idea of overengineering simple problems both amusing and oddly satisfying. While I deeply appreciate clean and elegant engineering solutions, there’s something entertaining, almost artistic, about deliberately building something needlessly complex that still works beautifully.
+So, I decided to build a <strong>robotic ashtray</strong>. When a person drops a small rectangular object butt onto its tray, the robot picks it up and places it neatly into a smaller ashtray. Hardly a world-changing invention, but it was a fun and effective sandbox for experimenting with robotic design and control.
+  </p>
+</section>
 <section class="card">
   <h2>Gallery</h2>
   <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px;">
     <figure>
       <img src="../assets/img/arm/arm.jpg" alt="Robotic ashtray — assembled arm view">
-      <figcaption class="muted">Assembled arm and tray</figcaption>
+      <figcaption class="muted">Assembled arm</figcaption>
     </figure>
     <figure>
       <img src="../assets/img/arm/butterbot.png" alt="Butter-bot inspiration (Rick and Morty, episode: Something Ricked This Way Comes, directed by John Rice)">
-      <figcaption class="muted">Gripper detail</figcaption>
+      <figcaption class="muted">Butter-bot inspiration (Rick and Morty, episode: Something Ricked This Way Comes, directed by John Rice)</figcaption>
     </figure>
   </div>
 </section>
-
-  <h2>Genesis</h2>
-  <p>
-    Inspired by the butter-passing robot from <em>Rick and Morty</em>, I explored the joy of
-    intentionally overengineering a simple task. The result: a <strong>robotic ashtray</strong> that picks
-    up a cigarette butt placed on its tray and deposits it neatly into a smaller ashtray.
-    It’s a lighthearted idea, but a great sandbox for real robotics design and control.
-  </p>
-</section>
-
 <section class="card">
   <h2>Technical Overview</h2>
 
@@ -82,7 +79,7 @@
   <h3>Perception &amp; Control</h3>
   <ul>
     <li>Runs on a <strong>Raspberry Pi 3 (Linux)</strong> controlling servos and an RGB camera.</li>
-    <li>Python stack with <strong>OpenCV</strong>:
+    <li>Python with <strong>OpenCV</strong>:
       <ul>
         <li>Grayscale conversion → edge detection → rectangular contour search,</li>
         <li>heuristics to confirm cigarette-butt candidates.</li>
