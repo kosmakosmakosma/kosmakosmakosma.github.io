@@ -36,26 +36,88 @@
 
   <main class="container">
     <article class="post">
-      <h1>Time-Series Forecasting</h1>
-      <p class="muted">2025 • Tools: HTML, CSS, MathJax</p>
+      <section class="card">
+  <h1>Robotic Ashtray</h1>
+  <p class="muted">Personal project • Robotics • Python • OpenCV • Raspberry Pi</p>
 
-      <p>
-        Consider an AR(1) model:
-        $$ x_t = \phi x_{t-1} + \epsilon_t, \quad \epsilon_t \sim \mathcal{N}(0,\sigma^2). $$
-        One-step-ahead forecast is $\hat{x}_{t|t-1} = \phi x_{t-1}$.
-      </p>
+<section class="card">
+  <h2>Gallery</h2>
+  <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px;">
+    <figure>
+      <img src="../assets/img/arm/arm.jpg" alt="Robotic ashtray — assembled arm view">
+      <figcaption class="muted">Assembled arm and tray</figcaption>
+    </figure>
+    <figure>
+      <img src="../assets/img/arm/butterbot.png" alt="Butter-bot inspiration (Rick and Morty, episode: Something Ricked This Way Comes, directed by John Rice)">
+      <figcaption class="muted">Gripper detail</figcaption>
+    </figure>
+  </div>
+</section>
 
-      <h2>Evaluation</h2>
-      <p>
-        Mean Squared Error (MSE):
-        $$ \mathrm{MSE} = \frac{1}{N} \sum_{t=1}^N (x_t - \hat{x}_t)^2. $$
-        Mean Absolute Error (MAE):
-        $$ \mathrm{MAE} = \frac{1}{N} \sum_{t=1}^N |x_t - \hat{x}_t|. $$
-      </p>
+  <h2>Genesis</h2>
+  <p>
+    Inspired by the butter-passing robot from <em>Rick and Morty</em>, I explored the joy of
+    intentionally overengineering a simple task. The result: a <strong>robotic ashtray</strong> that picks
+    up a cigarette butt placed on its tray and deposits it neatly into a smaller ashtray.
+    It’s a lighthearted idea, but a great sandbox for real robotics design and control.
+  </p>
+</section>
 
-      <p>
-        <a class="btn small" href="./">← Back to projects</a>
-      </p>
+<section class="card">
+  <h2>Technical Overview</h2>
+
+  <h3>Mechanical Design</h3>
+  <ul>
+    <li>Designed from scratch; joints modelled in <strong>Fusion 360</strong> and <strong>3D-printed (PLA)</strong>.</li>
+    <li><strong>Four-servo arm</strong> in a classic layout:
+      <ul>
+        <li>Base rotation (1× servo)</li>
+        <li>Radial positioning (2× servos)</li>
+        <li>Gripper actuation (1× servo)</li>
+      </ul>
+    </li>
+    <li>Kinematic characterization to support motion planning and control.</li>
+  </ul>
+
+  <h3>Perception &amp; Control</h3>
+  <ul>
+    <li>Runs on a <strong>Raspberry Pi 3 (Linux)</strong> controlling servos and an RGB camera.</li>
+    <li>Python stack with <strong>OpenCV</strong>:
+      <ul>
+        <li>Grayscale conversion → edge detection → rectangular contour search,</li>
+        <li>heuristics to confirm cigarette-butt candidates.</li>
+      </ul>
+    </li>
+    <li><strong>Inverse kinematics</strong> converts detections to servo commands for pick-and-place.</li>
+  </ul>
+</section>
+
+<section class="card">
+  <h2>Test footage</h2>
+  <div class="video-grid">
+    <div class="video">
+      <iframe
+        src="https://www.youtube-nocookie.com/embed/Q07sY05ZET8"
+        title="Grip"
+        loading="lazy"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen>
+      </iframe>
+    </div>
+    <div class="video">
+      <iframe
+        src="https://www.youtube-nocookie.com/embed/HrY9cX-Koio"
+        title="Grip and release"
+        loading="lazy"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen>
+      </iframe>
+    </div>
+  </div>
+</section>
+
     </article>
   </main>
 
