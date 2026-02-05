@@ -49,18 +49,18 @@
 
 <body>
   <header class="site-header">
-    <div class="container nav">
-      <a class="brand" href="../">Your Name</a>
-      <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
-      <nav class="nav-links" data-collapsible>
-        <a href="../">Home</a>
-        <a href="./">Projects</a>
-        <a href="../assets/cv/placeholder.txt">CV</a>
-        <a href="https://www.linkedin.com/in/your-handle" target="_blank" rel="noopener">LinkedIn</a>
-        <a href="https://github.com/your-handle" target="_blank" rel="noopener">GitHub</a>
-      </nav>
-    </div>
-  </header>
+  <div class="container nav">
+    <a class="brand" href="../">Kosma Krzyzanowski</a>
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+    <nav class="nav-links" data-collapsible>
+      <a href="../">Home</a>
+      <a href="./">Projects</a>
+      <a href="../assets/cv/CV_eng.pdf">CV</a>
+      <a href="http://www.linkedin.com/in/kosmak" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://github.com/kosmakosmakosma" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
 
   <main class="container">
     <article class="post">
@@ -68,7 +68,7 @@
       <p class="muted">
         Constrained Model Predictive Control (MPC) • Convex QP • Collision avoidance with tangent planes • Real-time simulation
       </p>
-
+      <p><strong>Authors:</strong> Kosma Krzyżanowski (algorithm design and implementation), Fin Kruseman Aretz (test environment design)</p>
       <ul class="pillrow">
         <li class="pill">Python</li>
         <li class="pill">cvxpy</li>
@@ -80,6 +80,12 @@
       <section class="card" style="margin-top: 16px;">
         <h2>Overview</h2>
         <p>
+            This project developed a Model Predictive Control (MPC) strategy for a mobile manipulator tasked with navigating
+            through a cluttered environment to reach and grasp a target object. The robot combined a holonomic base
+            with a 2-DOF robotic arm, requiring coordinated control of both subsystems under dynamic constraints and obstacle avoidance. The system was simulated in 
+            <strong>gym_urdf</strong> (https://github.com/maxspahn/gym_envs_urdf), with the MPC implemented as a constrained Quadratic Program (QP) solved in real-time using <strong>cvxpy</strong> and the <strong>OSQP</strong> solver.
+        </p>
+
           The controller was implemented as a constrained Quadratic Program (QP) solved at each control step using
           <strong>cvxpy</strong> with the <strong>OSQP</strong> solver. Since the mobile manipulator dynamics were inherently nonlinear,
           <strong>Pinocchio</strong> was used to compute the forward dynamics and linearize them online.
@@ -99,7 +105,21 @@
             <li>Temporal decoupling of simulation (240 Hz) and control (≈ 50 Hz)</li>
           </ul>
         </div>
+        
 
+        <section class="card">
+    <h2>Demo</h2>
+    <div class="video">
+      <iframe
+        src="https://youtu.be/4waI7uAxyTk"
+        title="Demonstration of the algorithms' performance"
+        loading="lazy"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen>
+      </iframe>
+    </div>
+  </section>
         <!-- Optional gallery placeholders (replace or remove) -->
         <!--
         <div class="grid-2" style="margin-top: 12px;">
@@ -120,7 +140,7 @@
 
         <h3>Cost function</h3>
         <p>
-          The objective was designed to track a reference while strongly penalizing obstacle constraint violations.
+          The objective function was designed to track a reference while strongly penalizing obstacle constraint violations.
           Input effort was included with low weight, reflecting its lower priority compared to feasibility and safety.
           The total cost combined stage costs over the horizon with a terminal cost:
         </p>
