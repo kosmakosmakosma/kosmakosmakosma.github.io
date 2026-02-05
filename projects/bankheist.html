@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Bank Heist Robot — MPC Mobile Manipulator</title>
+  <title>Bank Heist Robot - MPC Mobile Manipulator</title>
   <meta name="description" content="Model Predictive Control for a mobile manipulator: QP formulation, collision avoidance via tangent planes, reference clamping, and weight scheduling." />
   <link rel="stylesheet" href="../assets/css/style.css" />
 
@@ -65,7 +65,7 @@
   <main class="container">
     <article class="post">
       <h1>Bank Heist Robot — MPC for a Mobile Manipulator</h1>
-      <p class="muted">
+      <p>
         Constrained Model Predictive Control (MPC) • Convex QP • Collision avoidance with tangent planes • Real-time simulation
       </p>
       <p><strong>Authors:</strong> Kosma Krzyżanowski (algorithm design and implementation), Fin Kruseman Aretz (test environment design)</p>
@@ -95,17 +95,6 @@
           for the QP.
         </p>
 
-        <div class="callout">
-          <strong>Key MPC additions</strong>
-          <ul>
-            <li>Terminal cost (Riccati-based)</li>
-            <li>Slack variables for feasibility under tight collision constraints</li>
-            <li>Limited active obstacle set (closest interactions only)</li>
-            <li>Reference clamping (lookahead) to stabilize long-range behavior</li>
-            <li>Finite State Machine (FSM) for weight scheduling (navigation ↔ manipulation)</li>
-            <li>Temporal decoupling of simulation (240 Hz) and control (≈ 50 Hz)</li>
-          </ul>
-        </div>
         
 
         <section class="card">
@@ -282,12 +271,6 @@
           changing convex region induced by moving constraints.
         </p>
 
-        <h3>Target constraints</h3>
-        <p>
-          Treating the pedestal supporting the target like a standard obstacle produced a tangent plane that prevented reaching.
-          Constraints were therefore enforced strictly for the robot base but relaxed for the arm, allowing the end-effector to approach
-          and grasp the target.
-        </p>
       </section>
 
       <p>
