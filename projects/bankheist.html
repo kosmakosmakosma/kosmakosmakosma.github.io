@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bank Heist Robot — MPC Mobile Manipulator</title>
+  <meta name="description" content="Model Predictive Control for a mobile manipulator: QP formulation, collision avoidance via tangent planes, reference clamping, and weight scheduling." />
+  <link rel="stylesheet" href="../assets/css/style.css" />
+
+  <!-- MathJax (LaTeX rendering) -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$','$$'], ['\\[','\\]']],
+        tags: 'none'
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async
+          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <!-- Small local helpers (keeps global CSS untouched) -->
+  <style>
+    .pillrow { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 0; padding: 0; list-style: none; }
+    .pill {
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.02);
+      padding: 6px 10px;
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1;
+    }
+    .callout {
+      border-left: 3px solid var(--accent);
+      padding: 10px 12px;
+      background: rgba(128,202,255,0.06);
+      border-radius: 12px;
+      margin: 14px 0;
+    }
+    figure { margin: 0; }
+    figure img { width: 100%; height: auto; border-radius: 12px; border: 1px solid var(--border); }
+    figure figcaption { margin-top: 6px; font-size: 0.9rem; color: var(--muted); }
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+  </style>
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="../">Your Name</a>
+      <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+      <nav class="nav-links" data-collapsible>
+        <a href="../">Home</a>
+        <a href="./">Projects</a>
+        <a href="../assets/cv/placeholder.txt">CV</a>
+        <a href="https://www.linkedin.com/in/your-handle" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://github.com/your-handle" target="_blank" rel="noopener">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <article class="post">
+      <h1>Bank Heist Robot — MPC for a Mobile Manipulator</h1>
+      <p class="muted">
+        Constrained Model Predictive Control (MPC) • Convex QP • Collision avoidance with tangent planes • Real-time simulation
+      </p>
+
+      <ul class="pillrow">
+        <li class="pill">Python</li>
+        <li class="pill">cvxpy</li>
+        <li class="pill">OSQP</li>
+        <li class="pill">Pinocchio</li>
+        <li class="pill">PyBullet</li>
+      </ul>
+
+      <section class="card" style="margin-top: 16px;">
+        <h2>Overview</h2>
+        <p>
+          The controller was implemented as a constrained Quadratic Program (QP) solved at each control step using
+          <strong>cvxpy</strong> with the <strong>OSQP</strong> solver. Since the mobile manipulator dynamics were inherently nonlinear,
+          <strong>Pinocchio</strong> was used to compute the forward dynamics and linearize them online.
+          At each control cycle, the continuous nonlinear dynamics
+          \( \dot{x} = f(x,u) \) were evaluated and then linearized around the current state to provide a local LTI model
+          for the QP.
+        </p>
+
+        <div class="callout">
+          <strong>Key MPC additions</strong>
+          <ul>
+            <li>Terminal cost (Riccati-based)</li>
+            <li>Slack variables for feasibility under tight collision constraints</li>
+            <li>Limited active obstacle set (closest interactions only)</li>
+            <li>Reference clamping (lookahead) to stabilize long-range behavior</li>
+            <li>Finite State Machine (FSM) for weight scheduling (navigation ↔ manipulation)</li>
+            <li>Temporal decoupling of simulation (240 Hz) and control (≈ 50 Hz)</li>
+          </ul>
+        </div>
+
+        <!-- Optional gallery placeholders (replace or remove) -->
+        <!--
+        <div class="grid-2" style="margin-top: 12px;">
+          <figure>
+            <img src="../img/plots/bankheist/planning.png" alt="MPC planning and constraints">
+            <figcaption>Planning with convexified obstacle constraints (tangent planes)</figcaption>
+          </figure>
+          <figure>
+            <img src="../img/plots/bankheist/duck_under.png" alt="Arm ducking under obstacles">
+            <figcaption>Plane normal choice encourages “ducking under” horizontal obstacles</figcaption>
+          </figure>
+        </div>
+        -->
+      </section>
+
+      <section class="card">
+        <h2>MPC Formulation</h2>
+
+        <h3>Cost function</h3>
+        <p>
+          The objective was designed to track a reference while strongly penalizing obstacle constraint violations.
+          Input effort was included with low weight, reflecting its lower priority compared to feasibility and safety.
+          The total cost combined stage costs over the horizon with a terminal cost:
+        </p>
+
+        <div class="equation">
+          $$
+          \begin{aligned}
+          J &= \sum_{k=0}^{N-1}
+          \left(
+            \lVert x_k - x_{\text{ref}} \rVert_Q^2
+            + \lVert u_k \rVert_R^2
+            + w_{\text{slack}} \sum_{j=1}^{M} \epsilon_{k,j}
+          \right)
+          + \lVert x_N - x_{\text{ref}} \rVert_P^2,
+          \end{aligned}
+          $$
+        </div>
+
+        <p class="muted">
+          Where \(x_k \in \mathbb{R}^{n_x}\) is the state \( [q,\dot{q}]^\top\), \(u_k \in \mathbb{R}^{n_u}\) is the control input,
+          \(Q,R\succeq 0\) are diagonal weighting matrices, and \(\epsilon_{k,j}\ge 0\) are slack variables.
+        </p>
+
+        <p>
+          A critical design choice was the slack term \( w_{\text{slack}}\sum \epsilon\), which kept the QP feasible even when
+          the robot needed to temporarily violate plane constraints to reach the goal.
+        </p>
+
+        <h3>Constraints</h3>
+        <p>The optimization was subject to physical and operational constraints:</p>
+        <ul>
+          <li>
+            <strong>Linearized dynamics:</strong> nonlinear dynamics were linearized around the current operating point to obtain
+            a local LTI approximation for the prediction window.
+          </li>
+          <li>
+            <strong>Actuation limits:</strong> hard bounds on control inputs enforced motor torque limits.
+          </li>
+          <li>
+            <strong>Collision avoidance (convexified):</strong> to preserve convexity, obstacles were represented by tangent hyperplanes.
+            For each of the \(N_{\text{active}}=10\) closest obstacles, a plane was constructed using a normal vector \(n\) and a safety
+            offset \(d_{\text{safe}}\). The normal was computed at the closest point on the obstacle and oriented toward the robot base.
+            This choice ensured that for horizontal obstacles the plane “covered” the robot from above, encouraging the arm to duck under.
+            Joint points were checked against all active plane constraints.
+            Slack variables \(\epsilon \ge 0\) relaxed these constraints when strict feasibility became overly restrictive.
+          </li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Stability and Robustness Features</h2>
+
+        <h3>Reference clamping</h3>
+        <p>
+          To guide the local optimizer across large distances without a global planner, reference clamping was used.
+          When the robot was far from the goal, the linear approximation degraded and the state-tracking term could dominate.
+          The reference was therefore clamped to a maximum lookahead distance \(L_{\max}\):
+        </p>
+
+        <div class="equation">
+          $$
+          x_{\text{ref}} =
+          \begin{cases}
+          x_{\text{goal}} & \text{if } \lVert x_{\text{goal}} - x_{\text{curr}} \rVert \le L_{\max} \\
+          x_{\text{curr}} + L_{\max}\dfrac{x_{\text{goal}} - x_{\text{curr}}}{\lVert x_{\text{goal}} - x_{\text{curr}} \rVert}
+          & \text{otherwise.}
+          \end{cases}
+          $$
+        </div>
+
+        <h3>Finite State Machine for weight scheduling</h3>
+        <p>
+          A Finite State Machine (FSM) adapted the cost weights \(Q\) depending on mission phase:
+        </p>
+        <ul>
+          <li>
+            <strong>Navigation mode:</strong> when far from the target (\(>2.0\) m), arm weights were near-zero while base \((x,y)\)
+            weights increased. This prioritized getting the base close while keeping the arm compliant.
+            $$
+            Q_{\text{nav}} = \mathrm{diag}\big([2000, 2000, 0.01, 0.01, 0.01, 10, 10, 1, 1, 1]\big).
+            $$
+          </li>
+          <li>
+            <strong>Manipulation mode:</strong> near the target, high weights were applied to both base and arm joints to enable precise
+            reaching and grasping.
+            $$
+            Q_{\text{manip}} = \mathrm{diag}\big([2000, 2000, 2000, 2000, 2000, 10, 10, 10, 10, 10]\big).
+            $$
+          </li>
+        </ul>
+
+        <h3>Terminal cost computation</h3>
+        <p>
+          To improve stability without requiring an excessively long horizon, the terminal cost matrix \(P\) was computed by solving
+          the Discrete Algebraic Riccati Equation (DARE) for dynamics linearized around the reference:
+        </p>
+        <div class="equation">
+          $$
+          A^\top P A - P - A^\top P B (R + B^\top P B)^{-1} B^\top P A + Q = 0.
+          $$
+        </div>
+        <p class="muted">
+          This approximated the infinite-horizon cost-to-go near \(x_{\text{ref}}\) and was computed once offline to reduce runtime load.
+        </p>
+      </section>
+
+      <section class="card">
+        <h2>Real-Time Execution</h2>
+
+        <h3>Temporal decoupling of simulation and control</h3>
+        <p>
+          A zero-order hold strategy decoupled the high-frequency physics simulation from the more expensive optimization loop.
+          PyBullet stepped at 240 Hz for stable contacts, while MPC solved at ≈ 50 Hz. The optimal first control input \(u_0^\*\) was held
+          constant for a fixed number of simulation steps (\(\texttt{no\_steps}=15\)), ensuring smooth visualization without pausing physics.
+        </p>
+
+        <h3>Computational optimization</h3>
+        <p>To keep the loop responsive, the QP was structured for fast repeated solves:</p>
+        <ol>
+          <li>
+            <strong>Parametric problem definition:</strong> the QP was built once using <code>cvxpy.Parameter</code> objects for
+            dynamics \((A,B,d)\), initial state \(x_0\), and reference \(x_{\text{ref}}\). At runtime only parameter values were updated.
+          </li>
+          <li>
+            <strong>Warm starting:</strong> OSQP ran with <code>warm_start=True</code>, reusing previous primal/dual solutions to reduce
+            iterations when successive problems were similar.
+          </li>
+          <li>
+            <strong>Dynamic constraint selection:</strong> to keep the solver problem size constant and small, potential collision pairs
+            were sorted by distance, and only the \(N_{\text{active}}=10\) closest interactions were included at each step.
+          </li>
+        </ol>
+
+        <h3>Prediction horizon selection</h3>
+        <p>
+          The horizon \(N\) was selected as a trade-off between planning capability and computational load.
+          A horizon of \(N=40\) performed best: shorter horizons were too myopic, while longer horizons struggled with the constantly
+          changing convex region induced by moving constraints.
+        </p>
+
+        <h3>Target constraints</h3>
+        <p>
+          Treating the pedestal supporting the target like a standard obstacle produced a tangent plane that prevented reaching.
+          Constraints were therefore enforced strictly for the robot base but relaxed for the arm, allowing the end-effector to approach
+          and grasp the target.
+        </p>
+      </section>
+
+      <p>
+        <a class="btn small" href="./">← Back to projects</a>
+      </p>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <small>© <span id="year"></span> Your Name.</small>
+    </div>
+  </footer>
+
+  <script src="../assets/js/main.js" defer></script>
+</body>
+</html>
