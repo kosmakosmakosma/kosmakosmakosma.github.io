@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>District Heating Digital Twin — Kosma Krzyzanowski</title>
+  <meta name="description" content="Multi-physics modelling of a district heating network powered by waste heat and hydropower: distributed pipe PDE + lumped thermal/electrical/hydraulic subsystems, integrated simulations, and control levers." />
+
+  <link rel="stylesheet" href="../assets/css/style.css" />
+
+  <!-- Page-local layout helpers (keep minimal; rely on style.css for look & feel) -->
+  <style>
+    .grid {
+      display: grid;
+      gap: 16px;
+      margin: 16px 0;
+    }
+    @media (min-width: 900px){
+      .grid.two { grid-template-columns: 1.1fr .9fr; }
+      .grid.cards { grid-template-columns: 1fr 1fr; }
+    }
+    .figure { margin: 0; }
+    .figure img { width: 100%; height: auto; display: block; }
+    .figcap { margin-top: 8px; opacity: .8; font-size: .95em; }
+    .mathblock { overflow-x: auto; }
+    .linkrow { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0 18px; }
+  </style>
+
+  <!-- MathJax config -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$','$$'], ['\\[','\\]']],
+        tags: 'none'
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+</head>
+
+<body>
+  <!-- Same header/nav as your other project pages -->
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="../">Kosma Krzyzanowski</a>
+      <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+      <nav class="nav-links" data-collapsible>
+        <a href="../">Home</a>
+        <a href="./">Projects</a>
+        <a href="../assets/cv/CV_eng.pdf">CV</a>
+        <a href="http://www.linkedin.com/in/kosmak" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://github.com/kosmakosmakosma" target="_blank" rel="noopener">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <article class="post">
+      <h1>District Heating Digital Twin — Multi-Physics Modelling</h1>
+
+      <p>
+        A modular, physics-based model of a district heating network powered by data-center waste heat and a local hydropower source.
+        I combined a distributed pipe model (heat transport along the network) with lumped thermal, electrical and hydraulic subsystems,
+        then ran integrated simulations to reveal control levers relevant to real energy operations (heat reuse, flow scheduling, constraints).
+      </p>
+
+      <ul class="pillrow">
+        <li class="pill">Energy systems</li>
+        <li class="pill">Waste-heat recovery</li>
+        <li class="pill">District heating</li>
+        <li class="pill">PDE → discretization</li>
+        <li class="pill">State-space</li>
+        <li class="pill">Multi-physics coupling</li>
+        <li class="pill">Simulation + constraints</li>
+      </ul>
+
+      <!-- Quick links row (matches the “links to things” vibe across your pages) -->
+      <div class="linkrow">
+        <a class="btn small" href="./">← Back to projects</a>
+        <!-- Optional: update these if you host them -->
+        <!-- <a class="btn small" href="../assets/docs/district-heating-report.pdf" target="_blank" rel="noopener">Report (PDF)</a> -->
+        <!-- <a class="btn small" href="../assets/docs/district-heating-assignment.pdf" target="_blank" rel="noopener">Assignment (PDF)</a> -->
+        <!-- <a class="btn small" href="https://github.com/..." target="_blank" rel="noopener">Code</a> -->
+      </div>
+
+      <section class="card">
+        <h2>System to be modelled</h2>
+
+        <div class="grid two">
+          <div>
+            <p>
+              The assignment describes a hypothetical district heating system in Finland: a supercomputer (“LUMI”) produces time-varying waste heat,
+              transferred via a heat exchanger into a closed water loop. The loop delivers heat to four buildings through individual heat exchangers,
+              while a central pump drives circulation. The pump is powered either by a small hydropower plant (reservoir + turbine + regulated generator)
+              or a battery-backed fallback source when hydropower is unavailable.
+            </p>
+
+            <h3>Deliverable</h3>
+            <ul>
+              <li>First-principles models for each subsystem</li>
+              <li>Pipe heat transport as a distributed parameter model (PDE)</li>
+              <li>Subsystem state-space representations + realistic parameter sets</li>
+              <li>Full-system coupling + simulations under different operating scenarios</li>
+            </ul>
+          </div>
+
+          <figure class="figure">
+            <img loading="lazy"
+              src="../assets/img/miniprojdistrict/task.png"
+              alt="District heating system diagram (LUMI, buildings, pump, hydropower + battery)" />
+            <figcaption class="figcap">
+              System overview (LUMI waste heat → district loop → buildings; pump powered by hydropower or battery backup).
+              Credits: Manuel Mazo Jr, Riccardo Ferrari, Modelling of Dynamical Systems 2025, DCSC.
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Subsystem models</h2>
+        <p>
+          I modelled each component in a form that is easy to validate independently, then straightforward to integrate:
+          a distributed pipe model for network heat transport, plus lumped ODE/state-space blocks for sources, sinks, and powertrain.
+        </p>
+
+        <div class="grid cards">
+          <section class="card">
+            <h3>1) District heating pipe (distributed)</h3>
+            <p>
+              The pipe temperature \(T(x,t)\) was modelled as a 1-D advection–diffusion–reaction PDE with ambient heat loss and point sinks.
+              For simulation, I discretized in space and time and solved a cyclic linear system each time step (closed loop boundary).
+            </p>
+            <div class="mathblock">
+              \[
+                \frac{\partial T}{\partial t} + v\frac{\partial T}{\partial x}
+                = \alpha \frac{\partial^2 T}{\partial x^2}
+                - s\,(T-T_{\mathrm{amb}}(x,t))
+                - \frac{q'(x,t)}{\rho c_p A}.
+              \]
+            </div>
+          </section>
+
+          <section class="card">
+            <h3>2) LUMI heat source (lumped)</h3>
+            <p>
+              LUMI’s cooling loop was represented as a thermal capacitance with a time-varying heat generation input \(Q_{\mathrm{LUMI}}(t)\).
+              Heat transfer into the district loop is modelled via a heat-exchanger thermal resistance.
+            </p>
+            <div class="mathblock">
+              \[
+                \dot T_{\mathrm{L}} =
+                -\frac{1}{C_L R_{\mathrm{ex}}}T_{\mathrm{L}}
+                + \frac{1}{C_L}Q_{\mathrm{LUMI}}
+                + \frac{1}{C_L R_{\mathrm{ex}}}T_{\mathrm{DH,in}}.
+              \]
+            </div>
+          </section>
+
+          <section class="card">
+            <h3>3) Buildings (thermal sinks)</h3>
+            <p>
+              Each building was modelled with two energy nodes: room air and internal heating water.
+              Heat enters through a building heat exchanger, transfers via a radiator, and leaves to ambient.
+              Pairs of buildings share a conductive wall (1↔2 and 3↔4).
+            </p>
+            <ul>
+              <li>States: \(T_{B,i}\) (room), \(T_{\mathrm{WaterB},i}\) (internal loop)</li>
+              <li>Inputs: district supply, ambient temperature, neighbour room temperature</li>
+            </ul>
+          </section>
+
+          <section class="card">
+            <h3>4) Pump electrical drive + hydraulics</h3>
+            <p>
+              The pump motor was modelled as a DC circuit with a series resistance and parallel capacitor, including back-EMF.
+              Hydraulics were linked via a pump flow constant and a flow resistance, giving a compact state-space in motor node voltage and armature current.
+            </p>
+            <ul>
+              <li>States: \(v_m\), \(i_m\)</li>
+              <li>Outputs: flow \(w_{dh}\), electrical draw \(P_{\mathrm{src}}\)</li>
+              <li>Practical detail: a smaller electrical time step was required for numerical stability</li>
+            </ul>
+          </section>
+
+          <section class="card">
+            <h3>5) Hydropower plant + reservoir</h3>
+            <p>
+              The reservoir provides head \(H(t)\) and therefore available turbine flow and power.
+              The generator voltage is regulated to the DC bus nominal value when water is available, with current/power limits derived from head.
+            </p>
+            <div class="mathblock">
+              \[
+                \dot h = \frac{1}{A_{\mathrm{res}}}Q_{\mathrm{in}}
+                - \frac{\rho g}{A_{\mathrm{res}}R_{\mathrm{hydro,flow}}}(h-h_{\min}).
+              \]
+            </div>
+          </section>
+
+          <section class="card">
+            <h3>Validation philosophy</h3>
+            <p>
+              Each block was simulated stand-alone first (sanity checks, parameter tuning, qualitative realism),
+              then coupled into the full network model. This is the workflow used for industrial “digital twins”
+              where subsystem validation reduces integration risk.
+            </p>
+            <ul>
+              <li>Subsystem-level plots to verify dynamics and magnitudes</li>
+              <li>Clear interfaces: temperatures, flows, and power constraints</li>
+              <li>Integration experiments designed to expose dominant effects</li>
+            </ul>
+          </section>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Integrated model</h2>
+        <p>
+          The full system connects the distributed pipe PDE with the lumped subsystems:
+          LUMI acts as a heat source at a location along the loop; buildings act as point sinks; and pump flow
+          (from the electro-hydraulic model) sets the advection speed that transports heat around the network.
+        </p>
+        <ul>
+          <li><strong>Source:</strong> time-varying \(Q_{\mathrm{LUMI}}(t)\) injected via the LUMI heat exchanger</li>
+          <li><strong>Sinks:</strong> building extraction through heat exchangers + radiators</li>
+          <li><strong>Transport:</strong> when the pump is on, advection dominates; diffusion is negligible at network scale</li>
+          <li><strong>Constraints:</strong> DC bus + generator limits cap pump power, shaping heat delivery and response times</li>
+        </ul>
+      </section>
+
+      <div class="grid cards">
+        <section class="card">
+          <h2>Scenario A — Varied LUMI power</h2>
+          <p>
+            I varied \(Q_{\mathrm{LUMI}}(t)\) to observe how a changing waste-heat source propagates through the loop.
+            The resulting temperature wave travels with the flow, interacts with downstream sinks, and creates
+            time-delayed responses in each building depending on its thermal capacitance.
+          </p>
+          <ul>
+            <li>Shows how source modulation impacts network temperatures and building comfort</li>
+            <li>Highlights transport delay and recirculation effects in closed-loop distribution</li>
+          </ul>
+
+          <figure class="figure">
+            <img loading="lazy"
+              src="../assets/img/miniprojdistrict/full_heating_vel_fin.png"
+              alt="Full system results with varied LUMI heat generation" />
+            <figcaption class="figcap">Integrated simulation with varied LUMI heat generation.</figcaption>
+          </figure>
+        </section>
+
+        <section class="card">
+          <h2>Scenario B — Varied pump velocity</h2>
+          <p>
+            I switched the pump on/off to isolate the role of flow. With low/zero flow, temperature changes remain
+            local around the source and sinks. When the pump starts, heat rapidly redistributes around the loop—clear
+            evidence that advection dominates network-scale heat transport.
+          </p>
+          <ul>
+            <li>Demonstrates flow as the primary control lever for heat delivery</li>
+            <li>Useful for pump scheduling / demand response under power constraints</li>
+          </ul>
+
+          <figure class="figure">
+            <img loading="lazy"
+              src="../assets/img/miniprojdistrict/vel22.png"
+              alt="Full system results with varied pump velocity" />
+            <figcaption class="figcap">Integrated simulation with pump velocity toggled.</figcaption>
+          </figure>
+        </section>
+      </div>
+
+      <p style="margin-top:16px;">
+        <a class="btn small" href="./">← Back to projects</a>
+      </p>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <small>© <span id="year"></span> Kosma Krzyzanowski.</small>
+    </div>
+  </footer>
+
+  <script src="../assets/js/main.js" defer></script>
+</body>
+</html>
