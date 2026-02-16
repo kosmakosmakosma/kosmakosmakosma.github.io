@@ -111,3 +111,24 @@ img{ max-width: 100%; display: block; }
     grid-template-columns: 1fr;
   }
 }
+
+/* Add this to assets/css/style.css */
+
+.pillrow {
+  list-style: none; /* Removes the bullet points */
+  padding: 0;
+  margin: 1rem 0;
+  display: flex;    /* Aligns items in a row */
+  flex-wrap: wrap;  /* Allows wrapping on small screens */
+  gap: 10px;        /* Space between pills */
+}
+
+.pill {
+  background-color: #333; /* Dark background for the pill */
+  color: #fff;            /* White text */
+  padding: 5px 12px;
+  border-radius: 999px;   /* Makes the edges round */
+  font-size: 0.85rem;
+  font-weight: 500;
+  border: 1px solid #444; /* Optional subtle border */
+}

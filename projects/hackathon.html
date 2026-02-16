@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tactical Multi-Agent Interception (MPC + Sensor Fusion) — Kosma Krzyzanowski</title>
+  <meta name="description" content="Python simulation of multi-agent interception with MPC (cvxpy/OSQP), simple sensor fusion (visual/radar/dead-reckoning), dynamic role assignment, and a 3D tactical visualization exported to MP4." />
+  <link rel="stylesheet" href="../assets/css/style.css" />
+
+  <!-- MathJax (optional, matches your other pages) -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$','$$'], ['\\[','\\]']],
+        tags: 'none'
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+</head>
+
+<body>
+  <header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="../">Kosma Krzyzanowski</a>
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+    <nav class="nav-links" data-collapsible>
+      <a href="../">Home</a>
+      <a href="./">Projects</a>
+      <a href="../assets/cv/CV_eng.pdf">CV</a>
+      <a href="http://www.linkedin.com/in/kosmak" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://github.com/kosmakosmakosma" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+  <main class="container">
+    <article class="post">
+      <h1>Multi Agent Interception and Asset Distribution 🥈</h1>
+
+      <p>
+        As part of the Buildarena Hackathon in Stockholm, together with Łukasz Gałecki and Mateusz Mazurkiewicz in less than 23 hours we have developed a cheap, 
+        steerable aerostat that loiters as an airborne magazine and can deploy up to 10 interceptor drones when needed.
+
+        <strong>Our solution won 2nd place</strong> among 10 teams and the judges were impressed by the extensiveness and practicality of our approach.
+        
+        My main contributions were an <strong>interactive simulation</strong> and an <strong>algorithm for optimally distributing the air defences</strong>.
+      </p> 
+        <ul class="pillrow">
+        <li class="pill">Python</li>
+        <li class="pill">Model Predictive Control</li>
+        <li class="pill">Sensor Simulation</li>
+        <li class="pill">Multi-Agent Systems</li>
+        <li class="pill">Trajectory Planning</li>
+        <li class="pill">Simulation</li>
+        </ul>
+      <div style="clear: both;"></div>
+
+      <section>
+    <h2>Engagement simulation</h2>
+        <p>
+        Python simulation where multiple interceptors are deployed from the loitering platforms to intercept two incoming targets.
+    
+      </p>
+</section>
+      
+
+      <!-- ===================== -->
+      <!-- Demo (MP4)            -->
+      <!-- ===================== -->
+      <section class="card">
+    <h3>Demo</h3>
+    <div class="video">
+      <iframe
+        src="https://www.youtube-nocookie.com/embed/UgrH3GjP-fs"
+        title="Interception engagement simulation demo"
+        loading="lazy"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen>
+      </iframe>
+    </div>
+  </section>
+
+      <!-- ===================== -->
+      <!-- Scenario / Setup      -->
+      <!-- ===================== -->
+      <section class="card">
+        <h2>Scenario</h2>
+        <ul>
+          <li><strong>Two targets</strong> traverse the airspace with stochastic heading changes (different noise levels per target).</li>
+          <li><strong>Two “mothership” platforms</strong> define defense zones; crossing a zone triggers deployment and escalation (3 interceptors → 5 interceptors).</li>
+          <li><strong>Wave logic:</strong> Wave-1 is always available; Wave-2 is deployed only when the second zone is engaged.</li>
+          <li><strong>Kill condition:</strong> if an interceptor reaches a proximity threshold, the target is neutralized and an explosion animation is spawned.</li>
+        </ul>
+      </section>
+
+      <!-- ===================== -->
+      <!-- Sensing / Estimation  -->
+      <!-- ===================== -->
+      <section class="card">
+        <h3>Sensing & Estimation</h3>
+        <p>
+          The information available to the interceptors is intentionally limited to create a more realistic and challenging scenario. A small state estimator keeps a target track even when measurements are intermittent.
+          It switches between two modes:
+        </p>
+        <ul>
+          <li><strong>RADAR</strong> - outside visual range, a radar ping refreshes the estimate every fixed interval. Between radar pings, the estimate is propagated via dead-reckoning.
+        interceptors assume constant velocity from the previous ping (dark red dots in the simulation video)</li>
+          <li><strong>VISUAL</strong> - within visual range, the estimate snaps to the true target state.</li>
+        </ul>
+
+      </section>
+
+      <!-- ===================== -->
+      <!-- MPC Section           -->
+      <!-- ===================== -->
+      <section class="card">
+        <h3>Model Predictive Control (per interceptor)</h3>
+        <p>
+          Each interceptor solves a constrained quadratic program over a fixed horizon to track a predicted target trajectory:
+        </p>
+
+        <div class="equation">
+          \[
+            \min_{\{u_k\}} \sum_{k=0}^{N-1}
+            \Bigl(
+              \|p_{k+1}-p^{ref}_{k+1}\|^2_Q
+              + \|v_{k+1}-v^{ref}_{k+1}\|^2_{Q_v}
+              + \|u_k\|^2_R
+            \Bigr)
+            + \|p_N-p^{ref}_N\|^2_{P}
+          \]
+        </div>
+        The cost function puts the highest weight on the interceptor being at the same position as the target at the end of the horizon. 
+         It is also trying to minimize the distance to the predicted target position throughout the horizon, lightly penalizes velocity error and the control effort.
+        <p>
+          The dynamics use a simple discrete double-integrator state:
+          $x=[p\;v]^\top$, $p\in\mathbb{R}^3$, $v\in\mathbb{R}^3$:
+        </p>
+
+        <div class="equation">
+          \[
+            x_{k+1}=Ax_k+Bu_k,\quad
+            A=\begin{bmatrix}I & \Delta t I \\ 0 & I\end{bmatrix},\;
+            B=\begin{bmatrix}0\\ \Delta t I\end{bmatrix}.
+          \]
+        </div>
+        <p>
+            Constraints are put on the inputs and state to model the dynamic behavior of the real interceptors, max acceleration and max speed. The problem is solved using cvxpy with the OSQP solver, and warm-starting is used to speed up convergence.
+        </p>
+
+      <!-- ===================== -->
+      <!-- Coordination          -->
+      <!-- ===================== -->
+      <section class="card">
+        <h3>Multi-Agent Coordination</h3>
+        <p>
+          Coordination is lightweight practical, no heavy centralized planner, just allocation and role biasing that produces consistent intercept geometry.
+        </p>
+
+        <h4>1) Auction-style assignment (2 targets)</h4>
+        <ul>
+          <li>Active interceptors are split between targets using nearest-distance selection.</li>
+          <li>One target can be marked “primary” to receive more interceptors (e.g., 3 vs 2) during simultaneous engagements.</li>
+        </ul>
+
+        <h4>2) Dynamic roles (pincer geometry)</h4>
+        <ul>
+          <li>The closest interceptor becomes the “lead” pursuer.</li>
+          <li>Other interceptors receive a biased target-velocity prediction (±35° yaw) to approach from left/right.</li>
+          <li>This allows for handling the sudden direction changes of the target without requiring global coordination.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Strategic Defense Distribution</h2>
+        <p>
+          To ensure optimal coverage before any engagement begins, I developed a <strong>physics-inspired potential field planner</strong>. 
+          The algorithm takes as an input a list of high-value assets (cities in this case) with their importance weights and a list of known threat launch sites (red) as well as a number of defensive platforms to distribute. It then
+          treats the defensive platforms as particles moving through a force field defined by the geography:
+        </p>
+        <ul>
+          <li><strong>Attraction:</strong> High-value assets (cities) exert a "gravity" pull, drawing defenses closer to vulnerable areas.</li>
+          <li><strong>Repulsion:</strong> Platforms repel each other to prevent clustering, ensuring a wide and even defensive net.</li>
+          <li><strong>Exclusion:</strong> Known threat launch sites create "hard" repulsion zones to maintain safety stand-off distances.</li>
+        </ul>
+
+        <h3>Interactive Map Output</h3>
+        <p>
+            The script generates a standalone HTML map (using Folium) visualizing the optimized positions and coverage regions (green) against incoming threat vectors (purple).
+        </p>
+        <div class="video" style="height: 400px; overflow: hidden; border-radius: 14px; border: 1px solid #333;">
+          <iframe 
+            src="../assets/maps/border_safe_defense_map.html" 
+            title="Strategic Defense Map"
+            style="width: 100%; height: 100%; border: none;">
+          </iframe>
+        </div>
+
+        <br>
+        <p>
+          This approach provides a practical and computationally efficient method for pre-engagement defense distribution, ensuring critical assets are prioritized while maintaining flexibility to adapt to emerging threats.
+      </section>
+
+      <section class="card">
+        <h2>Links</h2>
+        <div class="cta">
+          <a class="btn ghost" href="./">← Back to projects</a>
+        </div>
+      </section>
+
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <small>© <span id="year"></span> Kosma Krzyzanowski.</small>
+    </div>
+  </footer>
+
+  <script src="../assets/js/main.js" defer></script>
+</body>
+</html>
